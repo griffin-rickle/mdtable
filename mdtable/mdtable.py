@@ -183,9 +183,6 @@ def _read_csv(
                 csv_file, delimiter=delimiter, quotechar=quotechar, escapechar=escapechar
             )
     csv_dict = {}
-    csv_reader = csv.reader(
-        csv_file, delimiter=delimiter, quotechar=quotechar, escapechar=escapechar
-    )
     header = next(csv_reader)
     num_cols = len(header)
     for num in range(num_cols):
