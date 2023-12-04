@@ -2,6 +2,9 @@
 
 import csv
 from io import IOBase
+import sys
+
+csv.field_size_limit(sys.maxsize)
 
 __version__ = "0.2"
 
