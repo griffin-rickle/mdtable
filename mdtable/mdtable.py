@@ -1,7 +1,7 @@
 """This file implements the markdown table generate from a csv file"""
 
 import csv
-import IOBase
+from io import IOBase
 
 __version__ = "0.2"
 
