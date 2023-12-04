@@ -1,6 +1,7 @@
 """This file implements the markdown table generate from a csv file"""
 
 import csv
+import IOBase
 
 __version__ = "0.2"
 
@@ -34,7 +35,7 @@ class MDTable:
     # pylint: disable=too-many-arguments
     def __init__(
         self,
-        filepath: str,
+        csv_obj: str | IOBase,
         aligns: tuple = None,
         padding: int = 1,
         delimiter: str = ",",
@@ -44,18 +45,18 @@ class MDTable:
         """MDTable
 
         Arguments:
-            filepath: string pointing to input csv file
+            csv: string pointing to input csv file or file-like object to read from
             aligns: tuple of alignments, must have same number as number of columns
             padding: padding to use in raw formatted markdown table
             delimiter: delimiter character in csv
             quotechar: quote character in csv
             escapechar: escape character in csv
         """
-        self.filepath = filepath
+        self.csv_ob = csv_obj
         self.aligns = aligns
         self.padding = padding
         self._csv_dict = _read_csv(
-            filepath, delimiter=delimiter, quotechar=quotechar, escapechar=escapechar
+             csv_obj, delimiter=delimiter, quotechar=quotechar, escapechar=escapechar
         )
         self._num_cols = len(self._csv_dict.keys())
         if aligns:
@@ -160,28 +161,36 @@ def _get_max_word_per_col(csv_dict) -> dict:
 
 
 def _read_csv(
-    filepath: str, delimiter: str = ",", quotechar: str = '"', escapechar: str = ""
+    csv_obj: str | IOBase, delimiter: str = ",", quotechar: str = '"', escapechar: str = ""
 ) -> dict:
     """Process a given csv into a python dictionary
 
     Arguments:
-        filepath: string pointing to csv file
-        delimiter: string that denotes what char seperates values in csv, default is ','
+        csv_obj: string pointing to csv file or file-like object
+        delimiter: string that denotes what char seperates values in csv_obj, default is ','
         quotechar: string that denotes what char surrounds fields containing delimeter char, default is '"'
         escapechar: string that denotes what char escaptes the delimeter char, default is no escape char.
     Returns:
         csv_dict: dictionary whose keys are column numbers and values are column lists
     """
-    csv_dict = {}
-    with open(filepath, "r") as csv_file:
+    if isinstance(csv_obj, IOBase):
         csv_reader = csv.reader(
-            csv_file, delimiter=delimiter, quotechar=quotechar, escapechar=escapechar
+            csv_obj, delimiter=delimiter, quotechar=quotechar, escapechar=escapechar
         )
-        header = next(csv_reader)
-        num_cols = len(header)
+    else:
+        with open(csv_obj, "r") as csv_file:
+            csv_reader = csv.reader(
+                csv_file, delimiter=delimiter, quotechar=quotechar, escapechar=escapechar
+            )
+    csv_dict = {}
+    csv_reader = csv.reader(
+        csv_file, delimiter=delimiter, quotechar=quotechar, escapechar=escapechar
+    )
+    header = next(csv_reader)
+    num_cols = len(header)
+    for num in range(num_cols):
+        csv_dict[num] = [header[num]]
+    for row in csv_reader:
         for num in range(num_cols):
-            csv_dict[num] = [header[num]]
-        for row in csv_reader:
-            for num in range(num_cols):
-                csv_dict[num].append(row[num])
+            csv_dict[num].append(row[num])
     return csv_dict
