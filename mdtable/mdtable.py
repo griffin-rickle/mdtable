@@ -176,6 +176,7 @@ def _read_csv(
     Returns:
         csv_dict: dictionary whose keys are column numbers and values are column lists
     """
+    csv_file = None
     if isinstance(csv_obj, IOBase):
         csv_reader = csv.reader(
             csv_obj, delimiter=delimiter, quotechar=quotechar, escapechar=escapechar
