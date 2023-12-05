@@ -181,10 +181,10 @@ def _read_csv(
             csv_obj, delimiter=delimiter, quotechar=quotechar, escapechar=escapechar
         )
     else:
-        with open(csv_obj, "r") as csv_file:
-            csv_reader = csv.reader(
-                csv_file, delimiter=delimiter, quotechar=quotechar, escapechar=escapechar
-            )
+        csv_file = open(csv_obj, "r")
+        csv_reader = csv.reader(
+            csv_file, delimiter=delimiter, quotechar=quotechar, escapechar=escapechar
+        )
     csv_dict = {}
     header = next(csv_reader)
     num_cols = len(header)
@@ -193,4 +193,6 @@ def _read_csv(
     for row in csv_reader:
         for num in range(num_cols):
             csv_dict[num].append(row[num])
+    if csv_file:
+        csv_file.close()
     return csv_dict
