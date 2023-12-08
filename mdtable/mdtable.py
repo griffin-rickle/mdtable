@@ -164,7 +164,7 @@ def _get_max_word_per_col(csv_dict) -> dict:
 
 
 def _read_csv(
-    csv_obj: str | IOBase, delimiter: str = ",", quotechar: str = '"', escapechar: str = ""
+    csv_obj: str | IOBase, delimiter: str = ",", quotechar: str = '"', escapechar: str = "\\"
 ) -> dict:
     """Process a given csv into a python dictionary
 
