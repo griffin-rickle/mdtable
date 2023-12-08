@@ -43,7 +43,7 @@ class MDTable:
         padding: int = 1,
         delimiter: str = ",",
         quotechar: str = '"',
-        escapechar: str = "",
+        escapechar: str = "\\",
     ):
         """MDTable
 
